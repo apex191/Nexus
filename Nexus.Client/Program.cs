@@ -1,31 +1,47 @@
-﻿using System.Net.Sockets;
+﻿using Nexus.Core;
 using System.Text;
 
-using var client = new TcpClient();
-await client.ConnectAsync("127.0.0.1", 9000);
-Console.WriteLine("Connected to server!");
+using var client = new NexusClient();
 
-using var stream = client.GetStream();
-
-_ = Task.Run(async () =>
+client.OnMessageReceived += (message) =>
 {
-    var buffer = new byte[4096];
-    while (true)
-    {
-        var bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length);
-        if (bytesRead == 0) break;
-        var message = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-        Console.WriteLine($"Server response: {message}");
-    }
-});
+    var text = Encoding.UTF8.GetString(message.ToArray());
+    Console.WriteLine($"Server response: {text}");
+};
 
+client.OnDisconnected += () =>
+{
+    Console.WriteLine("Disconnected from server.");
+};
 
+try
+{
+    await client.ConnectAsync("127.0.0.1", 9000);
+    Console.WriteLine("Connected to server. Type messages and press Enter. Type 'exit' to quit.");
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"Failed to connect: {ex.Message}");
+    return;
+}
+
+// Main loop to send messages.
 while (true)
 {
-    Console.Write("Enter message to send: ");
     var line = Console.ReadLine();
     if (string.IsNullOrEmpty(line)) continue;
-    
-    var messageBytes = Encoding.UTF8.GetBytes(line);
-    await stream.WriteAsync(messageBytes);
+    if (line.Equals("exit", StringComparison.OrdinalIgnoreCase))
+    {
+        break;
+    }
+
+    try
+    {
+        await client.SendMessageAsync(Encoding.UTF8.GetBytes(line));
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Failed to send message: {ex.Message}");
+        break;
+    }
 }

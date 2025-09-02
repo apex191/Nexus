@@ -1,29 +1,53 @@
-﻿using System.Net;
-using System.Net.Sockets;
+﻿using Nexus.Core;
 using System.Text;
 
-var listener = new TcpListener(IPAddress.Any, 9000);
-listener.Start();
-Console.WriteLine("Server started on port 9000...");
+// Create and configure the server.
+using var server = new NexusServer(9000);
 
-using var client = await listener.AcceptTcpClientAsync();
-Console.WriteLine("Client connected!");
-
-using var stream = client.GetStream();
-var buffer = new byte[4096]; // A buffer to read data into.
-
-while (true)
+server.OnClientConnected += (connection) =>
 {
-    var bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length);
-    if (bytesRead == 0) // The client has disconnected.
-    {
-        Console.WriteLine("Client disconnected.");
-        break;
-    }
-    
-    var message = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-    Console.WriteLine($"Received: {message}");
+    Console.WriteLine("A client has connected.");
+};
 
-    await stream.WriteAsync(buffer, 0, bytesRead);
-    Console.WriteLine($"Echoed: {message}");
+server.OnClientDisconnected += (connection) =>
+{
+    Console.WriteLine("A client has disconnected.");
+};
+
+server.OnMessageReceived += (connection, message) =>
+{
+    try
+    {
+        var text = Encoding.UTF8.GetString(message.ToArray());
+        Console.WriteLine($"Received message: {text}");
+        
+        var reply = Encoding.UTF8.GetBytes($"Server acknowledges: {text}");
+        var prefixedReply = new byte[4 + reply.Length];
+        System.Buffers.Binary.BinaryPrimitives.WriteInt32LittleEndian(prefixedReply, reply.Length);
+        reply.CopyTo(prefixedReply, 4);
+        
+        _ = connection.SendMessageAsync(prefixedReply);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error processing message: {ex.Message}");
+    }
+};
+
+// Start the server and wait for it to be cancelled.
+var cts = new CancellationTokenSource();
+Console.CancelKeyPress += (s, e) =>
+{
+    Console.WriteLine("Stopping server...");
+    cts.Cancel();
+    e.Cancel = true;
+};
+
+try
+{
+    await server.StartAsync(cts.Token);
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"Server error: {ex.Message}");
 }
