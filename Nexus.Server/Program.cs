@@ -1,7 +1,7 @@
 ﻿using Nexus.Core;
 using System.Text;
 
-// Create and configure the server.
+
 using var server = new NexusServer(9000);
 
 server.OnClientConnected += (connection) =>
@@ -34,7 +34,7 @@ server.OnMessageReceived += (connection, message) =>
     }
 };
 
-// Start the server and wait for it to be cancelled.
+
 var cts = new CancellationTokenSource();
 Console.CancelKeyPress += (s, e) =>
 {

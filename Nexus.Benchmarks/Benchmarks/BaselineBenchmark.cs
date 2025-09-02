@@ -19,10 +19,8 @@ public class BaselineBenchmark
     {
         _server = new NexusServer(19010);
         
-        // Simple server that just receives messages (no echo to avoid feedback loops)
         _server.OnMessageReceived += (connection, message) =>
         {
-            // Just mark as received - no echo back to avoid the corruption issue
             _responseReceived = true;
         };
 
@@ -47,7 +45,6 @@ public class BaselineBenchmark
         _responseReceived = false;
         await _client!.SendMessageAsync(_testMessage);
         
-        // Simple delay instead of waiting for response to avoid complexity
         await Task.Delay(1);
     }
 

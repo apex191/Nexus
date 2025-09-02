@@ -24,16 +24,16 @@ public class MessageThroughputBenchmarks
         _server.OnMessageReceived += (connection, message) =>
         {
             Interlocked.Increment(ref _messagesReceived);
-            // Echo back the message
+
             _ = connection.SendMessageAsync(message.ToArray());
         };
 
         _ = _server.StartAsync();
-        await Task.Delay(100); // Give server time to start
+        await Task.Delay(100);
 
         _client = new NexusClient();
         await _client.ConnectAsync("127.0.0.1", 19001);
-        await Task.Delay(100); // Give connection time to establish
+        await Task.Delay(100);
     }
 
     [GlobalCleanup]
@@ -59,7 +59,7 @@ public class MessageThroughputBenchmarks
         
         await Task.WhenAll(tasks);
         
-        // Wait for all messages to be processed
+
         while (_messagesReceived < messageCount)
         {
             await Task.Delay(1);

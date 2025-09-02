@@ -22,7 +22,7 @@ public class SimpleBenchmark
         _server.OnMessageReceived += (connection, message) =>
         {
             Console.WriteLine($"Server received message of {message.Length} bytes");
-            // Simple echo
+
             _ = Task.Run(async () =>
             {
                 try

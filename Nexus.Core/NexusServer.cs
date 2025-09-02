@@ -55,7 +55,6 @@ public class NexusServer : IDisposable
                 
                 _connections[connectionId] = connection;
                 
-                // Subscribe to the connection's events.
                 connection.OnMessageReceived += (conn, message) => OnMessageReceived?.Invoke(conn, message);
                 connection.OnDisconnected += (conn) => HandleClientDisconnection(conn, connectionId);
 
@@ -64,7 +63,6 @@ public class NexusServer : IDisposable
             }
             catch (OperationCanceledException)
             {
-                // This is expected on shutdown.
                 break;
             }
             catch (Exception ex)
@@ -83,7 +81,7 @@ public class NexusServer : IDisposable
     {
         _cancellationTokenSource?.Cancel();
         
-        // Close all connections
+
         foreach (var connection in _connections.Values)
         {
             connection.Stop();

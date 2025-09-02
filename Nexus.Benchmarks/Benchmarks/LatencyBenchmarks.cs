@@ -23,7 +23,7 @@ public class LatencyBenchmarks
         _server = new NexusServer(19004);
         _server.OnMessageReceived += (connection, message) =>
         {
-            // Echo back immediately with proper error handling
+
             try
             {
                 var messageData = message.ToArray();
@@ -46,7 +46,7 @@ public class LatencyBenchmarks
         };
 
         _ = _server.StartAsync();
-        await Task.Delay(500); // Increased delay for server startup
+        await Task.Delay(500);
 
         _client = new NexusClient();
         _client.OnMessageReceived += (message) =>
@@ -64,7 +64,7 @@ public class LatencyBenchmarks
         };
 
         await _client.ConnectAsync("127.0.0.1", 19004);
-        await Task.Delay(200); // Allow connection to stabilize
+        await Task.Delay(200);
     }
 
     [GlobalCleanup]

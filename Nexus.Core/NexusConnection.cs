@@ -14,7 +14,7 @@ public class NexusConnection : IDisposable
     private readonly Socket _socket;
     private readonly CancellationTokenSource _cancellationTokenSource = new();
 
-    // Internal events for the server/client to subscribe to.
+
     internal event Action<NexusConnection, ReadOnlySequence<byte>>? OnMessageReceived;
     internal event Action<NexusConnection>? OnDisconnected;
 
@@ -28,7 +28,7 @@ public class NexusConnection : IDisposable
     /// </summary>
     public void Start()
     {
-        // Fire-and-forget the processing task.
+
         _ = ProcessSocketAsync();
     }
     
@@ -71,7 +71,6 @@ public class NexusConnection : IDisposable
         }
         catch (Exception ex)
         {
-            // Log exceptions that might occur during setup or teardown.
             Console.WriteLine($"An error occurred in the connection processing: {ex.Message}");
         }
         finally
@@ -91,13 +90,13 @@ public class NexusConnection : IDisposable
                 int bytesRead = await _socket.ReceiveAsync(memory, SocketFlags.None, token);
                 if (bytesRead == 0)
                 {
-                    break; // Socket closed gracefully.
+                    break;
                 }
                 writer.Advance(bytesRead);
             }
             catch (OperationCanceledException)
             {
-                break; // Shutdown was requested.
+                break;
             }
             catch (Exception ex)
             {
@@ -153,11 +152,11 @@ public class NexusConnection : IDisposable
             return false;
         }
 
-        // Using System.Buffers.Binary.BinaryPrimitives is faster than BitConverter.
+
         var lengthSpan = buffer.Slice(0, 4).IsSingleSegment ? buffer.FirstSpan.Slice(0, 4) : buffer.Slice(0, 4).ToArray();
         int payloadLength = BinaryPrimitives.ReadInt32LittleEndian(lengthSpan);
         
-        // Malformed message check: protect against invalid length prefixes.
+
         if (payloadLength < 0 || payloadLength > 1_048_576) // e.g., 1MB limit
         {
              throw new InvalidOperationException($"Invalid message size: {payloadLength}. Must be between 0 and 1,048,576 bytes.");

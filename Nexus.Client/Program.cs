@@ -25,7 +25,7 @@ catch (Exception ex)
     return;
 }
 
-// Main loop to send messages.
+
 while (true)
 {
     var line = Console.ReadLine();

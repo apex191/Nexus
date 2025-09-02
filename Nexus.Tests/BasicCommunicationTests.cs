@@ -32,8 +32,7 @@ public class BasicCommunicationTests : IDisposable
         var client = new NexusClient();
         _disposables.Add(client);
         
-        // For testing, we need to find the actual port the server is using
-        // This is a limitation of our current design - we'll connect to a known port
+
         await client.ConnectAsync("127.0.0.1", 19999); // Use a specific test port
         await Task.Delay(100);
 
@@ -54,7 +53,7 @@ public class BasicCommunicationTests : IDisposable
         
         server.Stop();
         
-        // Should complete without hanging
+
         var completed = await Task.WhenAny(startTask, Task.Delay(5000));
         
         // Assert
@@ -125,7 +124,7 @@ public class BasicCommunicationTests : IDisposable
         // Act
         await client.SendMessageAsync(Encoding.UTF8.GetBytes(testMessage));
         
-        // Wait for message with timeout
+
         var received = await Task.WhenAny(messageReceived.Task, Task.Delay(2000));
         
         // Assert
