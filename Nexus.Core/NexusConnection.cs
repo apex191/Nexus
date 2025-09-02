@@ -37,20 +37,7 @@ public class NexusConnection : IDisposable
     /// </summary>
     public void Stop()
     {
-        if (!_cancellationTokenSource.Token.IsCancellationRequested)
-        {
-            _cancellationTokenSource.Cancel();
-        }
-        
-        try
-        {
-            _socket.Shutdown(SocketShutdown.Both);
-        }
-        catch (Exception)
-        {
-            // Socket may already be closed
-        }
-        
+        _cancellationTokenSource.Cancel();
         _socket.Close();
     }
 
@@ -65,9 +52,8 @@ public class NexusConnection : IDisposable
         }
         catch (Exception ex)
         {
-            // Log the error. For now, we'll write to console.
             Console.WriteLine($"Error sending message: {ex.Message}");
-            Stop(); // Close the connection on a send error.
+            Stop();
         }
     }
 
@@ -146,7 +132,6 @@ public class NexusConnection : IDisposable
 
             while (TryReadMessage(ref buffer, out ReadOnlySequence<byte> message))
             {
-                // Raise the event with the message payload.
                 OnMessageReceived?.Invoke(this, message);
             }
 

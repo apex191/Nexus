@@ -18,4 +18,23 @@ public static class ReadOnlySequenceExtensions
         sequence.CopyTo(array);
         return array;
     }
+
+    /// <summary>
+    /// Copies ReadOnlySequence data to a pre-allocated span for zero-allocation scenarios.
+    /// </summary>
+    public static void CopyTo(this ReadOnlySequence<byte> sequence, Span<byte> destination)
+    {
+        if (sequence.IsSingleSegment)
+        {
+            sequence.FirstSpan.CopyTo(destination);
+            return;
+        }
+
+        var offset = 0;
+        foreach (var segment in sequence)
+        {
+            segment.Span.CopyTo(destination[offset..]);
+            offset += segment.Length;
+        }
+    }
 }
