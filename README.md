@@ -85,6 +85,7 @@ cd Nexus.Client && dotnet run
 | **Nexus.Core** | Core networking library |
 | **Nexus.Server** | Example TCP server |
 | **Nexus.Client** | Example TCP client |
+| **Nexus.Benchmarks** | Performance benchmarks with BenchmarkDotNet |
 
 ## 🔧 Message Protocol
 
@@ -104,6 +105,19 @@ All messages are automatically framed with a 4-byte little-endian length prefix.
 dotnet build
 dotnet test  # (when tests are added)
 ```
+
+## 📊 Performance Benchmarks
+
+```bash
+# Run all performance benchmarks
+cd Nexus.Benchmarks && dotnet run -c Release
+
+# Run specific benchmark categories
+dotnet run -c Release -- --filter "*MessageThroughput*"
+dotnet run -c Release -- --filter "*Connection*"
+```
+
+See [Nexus.Benchmarks](./Nexus.Benchmarks/) for detailed performance analysis.
 
 ## 🎯 Use Cases
 

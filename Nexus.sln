@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nexus.Server", "Nexus.Serve
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nexus.Client", "Nexus.Client\Nexus.Client.csproj", "{0B40A15B-5947-4C3E-9848-565400B042D6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nexus.Benchmarks", "Nexus.Benchmarks\Nexus.Benchmarks.csproj", "{13475EC8-2688-4D8D-B1E7-D74EA7982546}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{0B40A15B-5947-4C3E-9848-565400B042D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B40A15B-5947-4C3E-9848-565400B042D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0B40A15B-5947-4C3E-9848-565400B042D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13475EC8-2688-4D8D-B1E7-D74EA7982546}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13475EC8-2688-4D8D-B1E7-D74EA7982546}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13475EC8-2688-4D8D-B1E7-D74EA7982546}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13475EC8-2688-4D8D-B1E7-D74EA7982546}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
