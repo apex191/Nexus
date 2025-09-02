@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "UyogtvLYK6Q=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\aravi\\source\\Nexus\\Nexus.Client\\Nexus.Client.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\aravi\\.nuget\\packages\\system.io.pipelines\\9.0.8\\system.io.pipelines.9.0.8.nupkg.sha512"
+  ],
+  "logs": []
+}
